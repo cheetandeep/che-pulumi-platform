@@ -1,0 +1,9 @@
+config:
+  gcp-platform:clusterName: "prod-gke-cluster"
+  gcp-platform:location: "us-central1"
+  gcp-platform:nodeCount: 1
+  gcp-platform:machineType: "e2-standard-4"
+  gcp-platform:serviceAccountId: "prod-service-account-id"
+  gcp-platform:serviceAccountDisplayName: "Prod Service Account"
+  gcp-platform:nodePoolName: "prd-node-pool"
+  gcp:project: sample-project
