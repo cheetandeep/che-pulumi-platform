@@ -1,6 +1,6 @@
 # GCP Platform with Pulumi
 
-This repository contains a Pulumi project to deploy a Google Kubernetes Engine (GKE) cluster on Google Cloud. The project is structured to support multiple environments (e.g., dev, prod) and uses modular code to manage different resources.
+This repository contains a Pulumi project to deploy a various Goole Cloud Platform resources. The project is structured to support multiple environments (e.g., dev, prod) and uses modular code to manage different resources.
 
 ## Directory Structure
 
