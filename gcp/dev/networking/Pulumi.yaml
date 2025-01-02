@@ -1,0 +1,7 @@
+name: gcp-platform
+description: A Go program to deploy a Networking resources on Google Cloud Platform
+runtime: go
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: kubernetes-gcp-go
