@@ -1,0 +1,10 @@
+config:
+  gcp-platform:location: "us-central1"
+  gcp-platform:nodeCount: "1"
+  gcp-platform:machineType: "e2-medium"
+  gcp-platform:serviceAccountId: "dev-service-account-id"
+  gcp-platform:serviceAccountDisplayName: "Dev Service Account"
+  gcp-platform:project: <project name>
+  gcp-platform:env: <environnment>
+  gcp-platform:app: <app name>
+  gcp-platform:networkingStackName: <pulumi stack name for networking>

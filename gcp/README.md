@@ -6,7 +6,7 @@ This repository contains a Pulumi project to deploy a various Goole Cloud Platfo
 
 ```
 pulumi/
-  go-examples/
+  gcp/
 │   ├── dev/
 │   │   ├── networking/
 │   │   │   └── main.go  (Deploys networking resources)
