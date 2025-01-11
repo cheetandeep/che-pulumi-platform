@@ -1,0 +1,9 @@
+config:
+  gcp-platform:env: dev
+  gcp-platform:hostProject: <Host project name>
+  gcp-platform:region: <region>
+  gcp-platform:serviceProject: <Service project name>
+  gcp-platform:primaryIpCidrRange: 10.2.0.0/16
+  gcp-platform:secondarypodIpCidrRange: 192.168.10.0/24
+  gcp-platform:secondarySvcIpCidrRange: 192.168.11.0/24
+  gcp:project: <Project name>
