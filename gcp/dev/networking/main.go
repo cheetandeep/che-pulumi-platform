@@ -2,14 +2,15 @@ package main
 
 import (
 	"fmt"
-	"gcp-platform/network"
+	"gcp-platform/internal/config"
+	"gcp-platform/pkg/network"
 
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		cfg := network.ReadConfig(ctx)
+		cfg := config.ReadConfig(ctx)
 
 		// Create Virtual Private Cloud (VPC) network
 		net, err := network.CreateNetwork(ctx, cfg)

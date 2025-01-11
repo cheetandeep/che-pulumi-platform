@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	"gcp-platform/kubernetes"
+	"gcp-platform/internal/config"
+	"gcp-platform/pkg/kubernetes"
 
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
@@ -10,24 +11,24 @@ import (
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
 		// Read configuration values
-		clusterName, location, nodeCount, machineType, serviceAccountId, serviceAccountDisplayName, nodePoolName := kubernetes.ReadConfig(ctx)
+		cfg := config.ReadConfig(ctx)
 
 		// Create a new service account
-		sa, err := kubernetes.CreateServiceAccount(ctx, serviceAccountId, serviceAccountDisplayName)
+		sa, err := kubernetes.CreateServiceAccount(ctx, cfg.ServiceAccountId, cfg.ServiceAccountDisplayName)
 		if err != nil {
 			return fmt.Errorf("failed to create service account: %w", err)
 		}
 		ctx.Log.Info("Service account created", &pulumi.LogArgs{})
 
 		// Create a new GKE cluster
-		primary, err := kubernetes.CreateGKECluster(ctx, clusterName, location, nodeCount, sa)
+		cluster, err := kubernetes.CreateGKECluster(ctx, cfg, cfg.Location, cfg.NodeCount, sa)
 		if err != nil {
 			return fmt.Errorf("failed to create GKE cluster: %w", err)
 		}
 		ctx.Log.Info("GKE cluster created", &pulumi.LogArgs{})
 
 		// Create a new node pool
-		_, err = kubernetes.CreateNodePool(ctx, nodePoolName, machineType, nodeCount, primary, sa)
+		_, err = kubernetes.CreateNodePool(ctx, cfg, cfg.MachineType, cfg.NodeCount, cluster, sa)
 		if err != nil {
 			return fmt.Errorf("failed to create node pool: %w", err)
 		}
