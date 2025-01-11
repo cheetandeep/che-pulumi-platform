@@ -7,20 +7,22 @@ This repository contains a Pulumi project to deploy a various Goole Cloud Platfo
 ```
 pulumi/
   go-examples/
+│   ├── dev/
+│   │   ├── networking/
+│   │   │   └── main.go  (Deploys networking resources)
+│   │   ├── Pulumi.networking.yaml  (Configuration for dev network)
+│   │   └── gke/
+│   │   │   └── main.go (Deploys GKE cluster and node pool)
+│   │   ├── Pulumi.gke.yaml  (Configuration for dev gke)
+│   ├── prod/
+│   │   ├── networking/
+│   │   │   └── main.go (Deploys networking resources)
+│   │   ├── Pulumi.networking.yaml  (Configuration for prod network)
+│   │   ├── gke/
+│   │   │   └── main.go (Deploys GKE resources, likely calling modules)
+│   │   ├── Pulumi.gke.yaml  (Configuration for prod GKE)
     go.mod
     go.sum
-    dev/
-      gke/
-        main.go
-        Pulumi.dev.yaml
-        Pulumi.yaml
-    kubernetes/
-      gke.go
-    prod/
-      gke/
-        main.go
-        Pulumi.prod.yaml
-        Pulumi.yaml
 ```
 
 
@@ -104,7 +106,12 @@ pulumi up
 ## Project Structure
 * `go.mod` and `go.sum`: Manage dependencies for the entire project.
 * `dev/` and `prod/` Directories: Contain environment-specific directories (`gke`) and their respective configuration files (`Pulumi.dev.yaml`, `Pulumi.prod.yaml`).
-* `kubernetes/` Directories: Contain reusable modules for creating various resources.
+* `pkg/` Directories: Contain reusable modules for creating various resources.
+* `internal/` This directory contains packages that are intended to be used only within your project. These packages are not accessible to other projects.
+  * `config/`: Contains configuration-related code.
+  
+    * `config.go`: Code for reading and managing configuration values.
+  
 
 ### Example Files
 `Pulumi.yaml` for `dev/gke`

@@ -1,35 +1,13 @@
 package network
 
 import (
+	"gcp-platform/internal/config"
+
 	"github.com/pulumi/pulumi-gcp/sdk/v8/go/gcp/compute"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 )
 
-type Config struct {
-	Env                string
-	HostProject        string
-	ServiceProject     string
-	PrimaryIpCidrRange string
-	SecPodIpCidrRange  string
-	SecSvcIpCidrRange  string
-	Region             string
-}
-
-func ReadConfig(ctx *pulumi.Context) Config {
-	cfg := config.New(ctx, "")
-	return Config{
-		Env:                cfg.Require("env"),
-		HostProject:        cfg.Require("hostProject"),
-		ServiceProject:     cfg.Require("serviceProject"),
-		PrimaryIpCidrRange: cfg.Require("primaryIpCidrRange"),
-		SecPodIpCidrRange:  cfg.Require("secondarypodIpCidrRange"),
-		SecSvcIpCidrRange:  cfg.Require("secondarySvcIpCidrRange"),
-		Region:             cfg.Require("region"),
-	}
-}
-
-func CreateNetwork(ctx *pulumi.Context, cfg Config) (*compute.Network, error) {
+func CreateNetwork(ctx *pulumi.Context, cfg config.Config) (*compute.Network, error) {
 	networkName := "shared-" + cfg.Env + "-network"
 	net, err := compute.NewNetwork(ctx, networkName, &compute.NetworkArgs{
 		Name:                  pulumi.String(networkName),
@@ -43,7 +21,7 @@ func CreateNetwork(ctx *pulumi.Context, cfg Config) (*compute.Network, error) {
 	return net, nil
 }
 
-func CreateSubnetwork(ctx *pulumi.Context, cfg Config, networkID pulumi.IDOutput) (*compute.Subnetwork, error) {
+func CreateSubnetwork(ctx *pulumi.Context, cfg config.Config, networkID pulumi.IDOutput) (*compute.Subnetwork, error) {
 	subnetName := "shared-" + cfg.Env + "-subnet"
 	subnets, err := compute.NewSubnetwork(ctx, subnetName, &compute.SubnetworkArgs{
 		Name:        pulumi.String(subnetName),
@@ -72,7 +50,7 @@ func CreateSubnetwork(ctx *pulumi.Context, cfg Config, networkID pulumi.IDOutput
 	return subnets, nil
 }
 
-func SharedVpc(ctx *pulumi.Context, cfg Config) (*compute.SharedVPCServiceProject, error) {
+func SharedVpc(ctx *pulumi.Context, cfg config.Config) (*compute.SharedVPCServiceProject, error) {
 
 	// A host project provides network resources to associated service projects.
 	host, err := compute.NewSharedVPCHostProject(ctx, "host", &compute.SharedVPCHostProjectArgs{
@@ -98,7 +76,7 @@ func SharedVpc(ctx *pulumi.Context, cfg Config) (*compute.SharedVPCServiceProjec
 	// return service, err
 }
 
-func NatRouter(ctx *pulumi.Context, cfg Config, networkID pulumi.IDOutput) (*compute.Router, error) {
+func NatRouter(ctx *pulumi.Context, cfg config.Config, networkID pulumi.IDOutput) (*compute.Router, error) {
 
 	cloudRouterName := "shared-" + cfg.Env + "-cloud-nat-router"
 	router, err := compute.NewRouter(ctx, "router", &compute.RouterArgs{

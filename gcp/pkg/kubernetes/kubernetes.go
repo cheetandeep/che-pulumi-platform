@@ -2,39 +2,12 @@ package kubernetes
 
 import (
 	"fmt"
+	"gcp-platform/internal/config"
 
 	"github.com/pulumi/pulumi-gcp/sdk/v8/go/gcp/container"
 	"github.com/pulumi/pulumi-gcp/sdk/v8/go/gcp/serviceaccount"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 )
-
-type Config struct {
-	Env                       string
-	App                       string
-	Location                  string
-	NodeCount                 int
-	MachineType               string
-	ServiceAccountId          string
-	ServiceAccountDisplayName string
-	NetworkingStackName       string
-}
-
-func ReadConfig(ctx *pulumi.Context) Config {
-	// Read configuration values
-	cfg := config.New(ctx, "")
-
-	return Config{
-		Env:                       cfg.Require("env"),
-		App:                       cfg.Require("app"),
-		Location:                  cfg.Require("location"),
-		NodeCount:                 cfg.RequireInt("nodeCount"),
-		MachineType:               cfg.Require("machineType"),
-		ServiceAccountId:          cfg.Require("serviceAccountId"),
-		ServiceAccountDisplayName: cfg.Require("serviceAccountDisplayName"),
-		NetworkingStackName:       cfg.Require("networkingStackName"),
-	}
-}
 
 // Creates a new service account
 func CreateServiceAccount(ctx *pulumi.Context, serviceAccountId string, serviceAccountDisplayName string) (*serviceaccount.Account, error) {
@@ -50,14 +23,14 @@ func CreateServiceAccount(ctx *pulumi.Context, serviceAccountId string, serviceA
 }
 
 // Creates new GKE cluster
-func CreateGKECluster(ctx *pulumi.Context, cfg Config, location string, nodeCount int, sa *serviceaccount.Account) (*container.Cluster, error) {
+func CreateGKECluster(ctx *pulumi.Context, cfg config.Config, location string, nodeCount int, sa *serviceaccount.Account) (*container.Cluster, error) {
 
 	// Read stack name from configuration
 	stackName := cfg.NetworkingStackName
 
 	// Get outputs from the stack that created the network
 	stackReference, err := pulumi.NewStackReference(ctx, stackName, nil)
-	//stackReference, err := pulumi.NewStackReference(ctx, "siche2824/gcp-platform/networking", nil)
+
 	if err != nil {
 		return nil, err
 	}
@@ -141,7 +114,7 @@ func CreateGKECluster(ctx *pulumi.Context, cfg Config, location string, nodeCoun
 }
 
 // Creates a new node pool for the GKE cluster
-func CreateNodePool(ctx *pulumi.Context, cfg Config, machineType string, nodeCount int, primary *container.Cluster, sa *serviceaccount.Account) (*container.NodePool, error) {
+func CreateNodePool(ctx *pulumi.Context, cfg config.Config, machineType string, nodeCount int, primary *container.Cluster, sa *serviceaccount.Account) (*container.NodePool, error) {
 
 	// Create a new node pool
 	nodePoolName := cfg.App + "-" + cfg.Env + "-nodepool"
