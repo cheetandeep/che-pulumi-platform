@@ -11,8 +11,9 @@ jobs:
         with:
           go-version: 'stable'
       - name: Run coverage
-        run: go test -race -coverprofile=coverage.txt -covermode=atomic ./...
+        run: go test -coverprofile=coverage.txt
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          slug: cheetandeep/che-pulumi-platform   
